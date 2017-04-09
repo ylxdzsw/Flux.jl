@@ -117,7 +117,17 @@ function Flux.back!(m::Model, Δ, xs...)
   back!(exec, Δ)
 end
 
-Flux.update!(m::Model, η) = (update!(m.last, η); m)
+Flux.update!(m::Model, η; all=false) = begin
+  update!(m.last, η)
+  if all
+    for exec in values(m.execs)
+      exec === m.last && continue
+      copyargs!(exec.graph.params, m.last.args)
+      loadparams!(exec)
+    end
+  end
+  m
+end
 
 # Recurrent Models
 
