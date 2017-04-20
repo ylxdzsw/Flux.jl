@@ -92,7 +92,7 @@ function done(x::Batched, fresh)
 
   for ibatch in 1:x.batch
     if done(x.iter, x.i)
-      warn("cannot perfectly divide data by batch size, remainder will be discarded")
+      ibatch != 1 && warn("cannot perfectly divide data by batch size, remainder will be discarded")
       return true
     end
 
